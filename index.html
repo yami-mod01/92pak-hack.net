@@ -152,25 +152,33 @@
 </div>
 
 <script>
-  // Apna username aur password yahan set karo
-  const correctUsername = "admin";
-  const correctPassword = "12345";
+  const users = [
+    { username: "admin", password: "12345" },
+    { username: "user1", password: "abc123" }
+  ];
 
   const form = document.getElementById("loginForm");
   form.addEventListener("submit", function(e){
-      e.preventDefault(); // page reload rokta hai
+      e.preventDefault();
 
       const user = document.getElementById("username").value;
       const pass = document.getElementById("password").value;
 
-      if(user === correctUsername && pass === correctPassword){
-          alert("Login Successful!");
-          window.location.href = "hack.html"; // yahan apni dusri page ka link do
+      const found = users.find(u => u.username === user && u.password === pass);
+
+      if(found){
+          alert("Login Successful! Welcome " + user);
+          // user ko session me save kar lo
+          sessionStorage.setItem("loggedIn", "true");
+          // redirect hack.html pe
+          window.location.href = "hack.html";
       }else{
           alert("Invalid Username or Password!");
       }
   });
 </script>
 
+
 </body>
 </html>
+
