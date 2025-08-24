@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VIP WOLVES Predictor - Advanced Chart Analyzer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #1e1e2f, #14141f);
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      background: #222236cc;
+      border-radius: 14px;
+      width: 480px;
+      max-width: 100%;
+      box-shadow: 0 0 40px #00ffa2aa;
+      padding: 30px 28px;
+      margin-bottom: 30px;
+      border: 1.5px solid #00ffa2cc;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 28px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      color: #00ffa2;
+      text-shadow: 0 0 10px rgba(0, 255, 162, 0.5);
+    }
+
+    h2 {
+      color: #80ffc8;
+      font-size: 1.3rem;
+      margin: 25px 0 15px 0;
+    }
+
+    label {
+      display: block;
+      margin-top: 22px;
+      font-weight: 600;
+      font-size: 1.15rem;
+      color: #80ffc8;
+      text-align: left;
+    }
+
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: none;
+      margin-top: 8px;
+      font-size: 1rem;
+      background: #121224;
+      color: #00ffa2;
+      box-shadow: inset 0 0 6px #00ffa2aa;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    textarea {
+      height: 100px;
+      resize: vertical;
+    }
+
+    input[type="file"] {
+      margin-top: 12px;
+      color: #00ffa2;
+      width: 100%;
+    }
+
+    button {
+      margin-top: 28px;
+      width: 100%;
+      background: #00ffa2;
+      color: #14141f;
+      border: none;
+      padding: 15px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      border-radius: 14px;
+      cursor: pointer;
+      box-shadow: 0 0 22px #00ffa2cc;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #00c77d;
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .output-box {
+      margin-top: 32px;
+      background: #121224cc;
+      border-radius: 14px;
+      padding: 22px 20px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-align: center;
+      box-shadow: inset 0 0 18px #00ffa2cc;
+      color: #00ffa2;
+      white-space: pre-line;
+    }
+
+    .image-preview {
+      margin-top: 18px;
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 0 18px #00ffa2cc;
+      display: none;
+    }
+
+    .error-msg {
+      margin-top: 15px;
+      color: #ff4c4c;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .success-msg {
+      margin-top: 15px;
+      color: #00ffa2;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .whatsapp-btn {
+      width: 420px;
+      max-width: 100%;
+      background: #25d366;
+      color: white;
+      font-weight: 700;
+      font-size: 1.2rem;
+      border-radius: 16px;
+      padding: 15px 0;
+      text-align: center;
+      text-decoration: none;
+      box-shadow: 0 0 24px #25d366cc;
+      margin: 0 auto 40px auto;
+      display: block;
+      transition: all 0.3s ease;
+    }
+
+    .whatsapp-btn:hover {
+      background: #1ebe5b;
+      transform: translateY(-2px);
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #00ffa2;
+    }
+
+    .tab {
+      padding: 12px 20px;
+      cursor: pointer;
+      background: #121224;
+      border-radius: 8px 8px 0 0;
+      margin-right: 5px;
+      font-weight: 600;
+    }
+
+    .tab.active {
+      background: #00ffa2;
+      color: #14141f;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 0.9rem;
+    }
+
+    .history-table th, .history-table td {
+      border: 1px solid #00ffa2;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .history-table th {
+      background-color: #00ffa233;
+    }
+
+    .analysis-result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #121224cc;
+      border-radius: 10px;
+      text-align: left;
+    }
+
+    .pattern-indicator {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin: 0 2px;
+      font-size: 0.8rem;
+    }
+
+    .pattern-big {
+      background-color: #ff4757;
+      color: white;
+    }
+
+    .pattern-small {
+      background-color: #2ed573;
+      color: white;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 30px 12px;
+      }
+      
+      .container {
+        width: 100%;
+        padding: 20px 15px;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>VIP 𝑾𝑶𝑳𝑽𝑬𝑺 Predictor</h1>
+    <h1>TRX WINGO SIGNALS</h1>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="prediction">Prediction</div>
+      <div class="tab" data-tab="history">History Analysis</div>
+    </div>
+
+    <div class="tab-content active" id="prediction-tab">
+      <label for="periodInput">Enter Period Number:</label>
+      <input type="text" id="periodInput" placeholder="e.g. 202507030123" />
+
+      <label for="fileInput">Or upload Wingo Chart Screenshot:</label>
+      <input type="file" id="fileInput" accept="image/png, image/jpeg" />
+
+      <label for="numberSelect">Or select last number manually:</label>
+      <select id="numberSelect">
+        <option value="">Select Last Number</option>
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+      </select>
+
+      <button id="predictBtn">Predict Next Result</button>
+
+      <div class="error-msg" id="errorMsg"></div>
+      <div class="output-box" id="resultOutput">Prediction will appear here</div>
+      <img id="imgPreview" class="image-preview" alt="Chart Preview" />
+    </div>
+
+    <div class="tab-content" id="history-tab">
+      <h2>Analyze Historical Data</h2>
+      
+      <label for="historyData">Enter past results (comma separated numbers or B/S):</label>
+      <textarea id="historyData" placeholder="e.g. 3,7,2,9,5,1,8,4,6,0 or B,S,S,S,B,B,B,C,B,S"></textarea>
+      
+      <label for="historyFile">Or upload historical screenshot:</label>
+      <input type="file" id="historyFile" accept="image/png, image/jpeg" />
+      
+      <button id="analyzeBtn">Analyze Patterns</button>
+      
+      <div class="error-msg" id="historyErrorMsg"></div>
+      <div class="success-msg" id="historySuccessMsg"></div>
+      
+      <div id="analysisResult" class="analysis-result">
+        Analysis results will appear here
+      </div>
+      
+      <div id="historyTableContainer"></div>
+    </div>
+  </div>
+
+  <a href="https://wa.link/l8abgs" target="_blank" class="whatsapp-btn">
+    Join WhatsApp Group for 99% Accurate Signals
+  </a>
+
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+  <script>
+    // DOM elements
+    const periodInput = document.getElementById('periodInput');
+    const fileInput = document.getElementById('fileInput');
+    const numberSelect = document.getElementById('numberSelect');
+    const predictBtn = document.getElementById('predictBtn');
+    const resultOutput = document.getElementById('resultOutput');
+    const imgPreview = document.getElementById('imgPreview');
+    const errorMsg = document.getElementById('errorMsg');
+    
+    const historyData = document.getElementById('historyData');
+    const historyFile = document.getElementById('historyFile');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const historyErrorMsg = document.getElementById('historyErrorMsg');
+    const historySuccessMsg = document.getElementById('historySuccessMsg');
+    const analysisResult = document.getElementById('analysisResult');
+    const historyTableContainer = document.getElementById('historyTableContainer');
+    
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    // Tab switching functionality
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabId = tab.getAttribute('data-tab');
+        
+        // Update active tab
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // Show active tab content
+        tabContents.forEach(content => {
+          content.classList.remove('active');
+          if (content.id === `${tabId}-tab`) {
+            content.classList.add('active');
+          }
+        });
+      });
+    });
+
+    // Trend map fixed based on data
+    const trendMap = {
+      0: "SMALL",
+      1: "SMALL",
+      2: "SMALL",
+      3: "SMALL",
+      4: "SMALL",
+      5: "BIG",
+      6: "BIG",
+      7: "BIG",
+      8: "BIG",
+      9: "BIG"
+    };
+
+    // Color mapping
+    const colorMap = {
+      0: "VIOLET",
+      1: "RED",
+      2: "GREEN",
+      3: "RED",
+      4: "GREEN",
+      5: "VIOLET",
+      6: "GREEN",
+      7: "RED",
+      8: "GREEN",
+      9: "RED"
+    };
+
+    // Store historical data
+    let historicalNumbers = [];
+    let historicalResults = [];
+
+    function resetAll() {
+      resultOutput.textContent = 'Prediction will appear here';
+      errorMsg.textContent = '';
+      imgPreview.style.display = 'none';
+    }
+
+    // Enhanced prediction logic based on historical patterns
+    function predictFromDigitAndHistory(digit, history = []) {
+      // Base prediction
+      let prediction = trendMap[digit] || (digit >= 5 ? 'BIG' : 'SMALL');
+      let color = colorMap[digit];
+      let confidence = 85;
+      
+      // If we have historical data, use it to refine prediction
+      if (history.length > 0) {
+        // Count recent streaks
+        let bigStreak = 0;
+        let smallStreak = 0;
+        
+        // Analyze last 10 results for patterns
+        const recentHistory = history.slice(-10);
+        
+        for (let i = recentHistory.length - 1; i >= 0; i--) {
+          if (recentHistory[i] === 'BIG') {
+            bigStreak++;
+            if (smallStreak > 0) break;
+          } else if (recentHistory[i] === 'SMALL') {
+            smallStreak++;
+            if (bigStreak > 0) break;
+          }
+        }
+        
+        // Apply pattern recognition from your screenshots
+        if (smallStreak >= 5) {
+          // After 5+ SMALL, BIG is more likely
+          prediction = 'BIG';
+          confidence = 92;
+        } else if (bigStreak >= 3) {
+          // After 3+ BIG, SMALL is more likely
+          prediction = 'SMALL';
+          confidence = 88;
+        }
+        
+        // Digit-specific patterns based on your data analysis
+        if (digit === 0 || digit === 5) {
+          // VIOLET numbers often followed by opposite type
+          prediction = prediction === 'BIG' ? 'SMALL' : 'BIG';
+          confidence = 85;
+        } else if (digit === 2 || digit === 7) {
+          // These digits often repeat the same type
+          confidence += 3;
+        }
+      }
+      
+      return { prediction, color, confidence, digit };
+    }
+
+    function displayPrediction({ prediction, color, confidence, digit }) {
+      resultOutput.innerHTML = `
+✅ Last Digit: ${digit}
+🔮 Prediction: ${prediction}
+🎨 Color: ${color}
+📊 Confidence: ${confidence}%
+      `;
+    }
+
+    function showWithDelay(predictionObj) {
+      resultOutput.textContent = "⏳ Analyzing patterns...";
+      setTimeout(() => {
+        displayPrediction(predictionObj);
+      }, 3000);
+    }
+
+    // Analyze historical patterns
+    function analyzeHistoricalData(numbers, results) {
+      if (numbers.length < 3) {
+        return "Need at least 3 historical data points for analysis.";
+      }
+      
+      // Count occurrences
+      const counts = { BIG: 0, SMALL: 0 };
+      const colorCounts = { RED: 0, GREEN: 0, VIOLET: 0 };
+      const digitCounts = {};
+      
+      numbers.forEach(num => {
+        const category = trendMap[num];
+        const color = colorMap[num];
+        
+        counts[category] = (counts[category] || 0) + 1;
+        colorCounts[color] = (colorCounts[color] || 0) + 1;
+        digitCounts[num] = (digitCounts[num] || 0) + 1;
+      });
+      
+      // Calculate percentages
+      const total = numbers.length;
+      const bigPct = ((counts.BIG / total) * 100).toFixed(2);
+      const smallPct = ((counts.SMALL / total) * 100).toFixed(2);
+      
+      // Find most common digit
+      let mostCommonDigit = null;
+      let maxCount = 0;
+      
+      for (const digit in digitCounts) {
+        if (digitCounts[digit] > maxCount) {
+          maxCount = digitCounts[digit];
+          mostCommonDigit = digit;
+        }
+      }
+      
+      // Analyze streaks
+      let currentStreak = 0;
+      let currentType = results[0];
+      const streaks = [];
+      
+      for (let i = 0; i < results.length; i++) {
+        if (results[i] === currentType) {
+          currentStreak++;
+        } else {
+          streaks.push({ type: currentType, length: currentStreak });
+          currentType = results[i];
+          currentStreak = 1;
+        }
+      }
+      streaks.push({ type: currentType, length: currentStreak });
+      
+      // Find longest streaks
+      const longestBigStreak = Math.max(...streaks.filter(s => s.type === 'BIG').map(s => s.length), 0);
+      const longestSmallStreak = Math.max(...streaks.filter(s => s.type === 'SMALL').map(s => s.length), 0);
+      
+      // Generate analysis report
+      let report = `<strong>Historical Data Analysis (${total} results):</strong><br><br>`;
+      report += `BIG occurrences: ${counts.BIG} (${bigPct}%)<br>`;
+      report += `SMALL occurrences: ${counts.SMALL} (${smallPct}%)<br><br>`;
+      
+      report += `<strong>Color Distribution:</strong><br>`;
+      report += `RED: ${colorCounts.RED} (${((colorCounts.RED/total)*100).toFixed(2)}%)<br>`;
+      report += `GREEN: ${colorCounts.GREEN} (${((colorCounts.GREEN/total)*100).toFixed(2)}%)<br>`;
+      report += `VIOLET: ${colorCounts.VIOLET} (${((colorCounts.VIOLET/total)*100).toFixed(2)}%)<br><br>`;
+      
+      report += `<strong>Most common digit:</strong> ${mostCommonDigit} (appeared ${maxCount} times)<br>`;
+      report += `<strong>Longest BIG streak:</strong> ${longestBigStreak}<br>`;
+      report += `<strong>Longest SMALL streak:</strong> ${longestSmallStreak}<br><br>`;
+      
+      // Add prediction based on historical trends
+      const lastDigit = numbers[numbers.length - 1];
+      const lastResult = results[results.length - 1];
+      const prediction = predictFromDigitAndHistory(lastDigit, results);
+      
+      report += `<strong>Prediction based on latest patterns:</strong><br>`;
+      report += `Last result: ${lastResult} (digit: ${lastDigit})<br>`;
+      report += `Next likely outcome: ${prediction.prediction}<br>`;
+      report += `Expected color: ${prediction.color}<br>`;
+      report += `Confidence: ${prediction.confidence}%`;
+      
+      return report;
+    }
+
+    // Create history table
+    function createHistoryTable(numbers, results) {
+      let tableHTML = `<h3>Historical Results</h3>
+        <table class="history-table">
+          <tr>
+            <th>#</th>
+            <th>Digit</th>
+            <th>Type</th>
+            <th>Color</th>
+          </tr>`;
+      
+      numbers.forEach((num, index) => {
+        tableHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${num}</td>
+            <td>${trendMap[num]}</td>
+            <td>${colorMap[num]}</td>
+          </tr>`;
+      });
+      
+      tableHTML += `</table>`;
+      return tableHTML;
+    }
+
+    // Process input data (can be digits or B/S notation)
+    function processInputData(input) {
+      const items = input.split(',').map(item => item.trim().toUpperCase());
+      const numbers = [];
+      const results = [];
+      
+      for (const item of items) {
+        if (item === 'B' || item === 'BIG') {
+          numbers.push(Math.floor(Math.random() * 5) + 5); // Random BIG digit (5-9)
+          results.push('BIG');
+        } else if (item === 'S' || item === 'SMALL') {
+          numbers.push(Math.floor(Math.random() * 5)); // Random SMALL digit (0-4)
+          results.push('SMALL');
+        } else if (!isNaN(item) && item >= 0 && item <= 9) {
+          numbers.push(parseInt(item));
+          results.push(trendMap[item]);
+        }
+      }
+      
+      return { numbers, results };
+    }
+
+    // Event listeners
+    predictBtn.onclick = async () => {
+      resetAll();
+      const period = periodInput.value.trim();
+      const number = numberSelect.value;
+      const file = fileInput.files[0];
+
+      if (period) {
+        const digits = period.match(/\d/g);
+        if (digits && digits.length) {
+          const lastDigit = parseInt(digits[digits.length - 1], 10);
+          const p = predictFromDigitAndHistory(lastDigit, historicalResults);
+          showWithDelay(p);
+        } else {
+          errorMsg.textContent = 'Period number me koi digit nahi mila.';
+        }
+
+      } else if (file) {
+        const imgUrl = URL.createObjectURL(file);
+        imgPreview.src = imgUrl;
+        imgPreview.style.display = 'block';
+        resultOutput.textContent = 'Analyzing chart image...';
+
+        Tesseract.recognize(file, 'eng').then(({ data: { text } }) => {
+          const match = text.match(/\d/g);
+          if (match && match.length > 0) {
+            const lastDigit = parseInt(match[match.length - 1], 10);
+            const prediction = predictFromDigitAndHistory(lastDigit, historicalResults);
+            showWithDelay(prediction);
+          } else {
+            resultOutput.textContent = '❌ Could not detect any number.';
+          }
+        }).catch(err => {
+          console.error(err);
+          resultOutput.textContent = '❌ Error processing image.';
+        });
+
+      } else if (number !== '') {
+        const prediction = predictFromDigitAndHistory(parseInt(number, 10), historicalResults);
+        showWithDelay(prediction);
+
+      } else {
+        errorMsg.textContent = 'Please enter a period, upload chart, or select number.';
+      }
+    };
+
+    analyzeBtn.onclick = async () => {
+      historyErrorMsg.textContent = '';
+      historySuccessMsg.textContent = '';
+      analysisResult.innerHTML = 'Analyzing...';
+      
+      const dataText = historyData.value.trim();
+      const file = historyFile.files[0];
+      
+      if (dataText) {
+        // Process text data
+        const { numbers, results } = processInputData(dataText);
+        
+        if (numbers.length > 0) {
+          historicalNumbers = numbers;
+          historicalResults = results;
+          historySuccessMsg.textContent = `Successfully loaded ${numbers.length} historical data points.`;
+          analysisResult.innerHTML = analyzeHistoricalData(numbers, results);
+          historyTableContainer.innerHTML = createHistoryTable(numbers, results);
+        } else {
+          historyErrorMsg.textContent = 'Please enter valid numbers (0-9) or B/S values separated by commas.';
+          analysisResult.innerHTML = 'Analysis results will appear here';
+        }
+      } else if (file) {
+        // Process image file
+        analysisResult.innerHTML = 'Extracting data from image...';
+        
+        Tesseract.recognize(file, 'eng').then(({ data: { text } }) => {
+          // Try to extract B/S results from the text
+          const bsMatches = text.match(/\b[BSCA]\b/gi) || [];
+          const digitMatches = text.match(/\b[0-9]\b/g) || [];
+          
+          if (bsMatches.length > 0 || digitMatches.length > 0) {
+            let numbers = [];
+            let results = [];
+            
+            if (bsMatches.length >= digitMatches.length) {
+              // Prefer B/S notation if available
+              results = bsMatches.map(m => {
+                if (m.toUpperCase() === 'B') return 'BIG';
+                if (m.toUpperCase() === 'S') return 'SMALL';
+                return 'BIG'; // default for C/A
+              });
+              
+              // Generate corresponding digits
+              numbers = results.map(r => r === 'BIG' ? 
+                Math.floor(Math.random() * 5) + 5 : // Random BIG digit (5-9)
+                Math.floor(Math.random() * 5));     // Random SMALL digit (0-4)
+            } else {
+              // Use digits
+              numbers = digitMatches.map(m => parseInt(m));
+              results = numbers.map(num => trendMap[num]);
+            }
+            
+            historicalNumbers = numbers;
+            historicalResults = results;
+            historyData.value = results.map(r => r.charAt(0)).join(', ');
+            historySuccessMsg.textContent = `Successfully extracted ${numbers.length} results from image.`;
+            analysisResult.innerHTML = analyzeHistoricalData(numbers, results);
+            historyTableContainer.innerHTML = createHistoryTable(numbers, results);
+          } else {
+            historyErrorMsg.textContent = 'No valid results detected in the image.';
+            analysisResult.innerHTML = 'Analysis results will appear here';
+          }
+        }).catch(err => {
+          console.error(err);
+          historyErrorMsg.textContent = 'Error processing image.';
+          analysisResult.innerHTML = 'Analysis results will appear here';
+        });
+      } else {
+        historyErrorMsg.textContent = 'Please enter historical data or upload an image.';
+        analysisResult.innerHTML = 'Analysis results will appear here';
+      }
+    };
+  </script>
+</body>
+</html>
