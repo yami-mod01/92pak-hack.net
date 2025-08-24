@@ -708,5 +708,13 @@
       }
     };
   </script>
+  <script>
+  // Agar login nahi kiya toh redirect login.html pe
+  if(sessionStorage.getItem("loggedIn") !== "true"){
+      window.location.href = "login.html";
+  }
+</script>
+
 </body>
+
 </html>
